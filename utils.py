@@ -5,6 +5,7 @@ import yfinance as yf
 import pandas as pd
 from datetime import datetime, timedelta
 import time
+from tqdm import tqdm  # added for progress bar
 
 # 🔑 PLACE YOUR NEWSAPI KEY HERE
 NEWSAPI_KEY = "9d301a9505b042569d35387bddef276e"
@@ -36,12 +37,13 @@ def get_stock_change(ticker="AAPL"):
     return data[["Close", "Return"]]
 
 
-def fetch_sentiment_timeseries(ticker="AAPL", days=365):
+def fetch_sentiment_timeseries(ticker="AAPL", days=30):
     sia = SentimentIntensityAnalyzer()
     today = datetime.utcnow().date()
     sentiment_by_date = {}
 
-    for i in range(days):
+    day_range = range(0, days * 3, 3)  # every 3rd day up to approx `days` worth
+    for i in tqdm(day_range, desc=f"Fetching sentiment for {ticker}"):
         date = today - timedelta(days=i)
         url = "https://newsapi.org/v2/everything"
         params = {

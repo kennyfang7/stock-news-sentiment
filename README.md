@@ -7,6 +7,8 @@ This project scrapes financial news headlines, performs sentiment analysis using
 - Analyzes sentiment with NLTK's VADER
 - Fetches historical stock data with yfinance
 - Visualizes sentiment vs stock return
+- **NEW:** Plots a sentiment time series over the past 30 days for trend tracking
+- **Optimized:** Limits API requests to every 3rd day and shows a progress bar
 
 ## Setup
 ```bash
