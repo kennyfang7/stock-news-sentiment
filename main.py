@@ -31,7 +31,7 @@ if __name__ == "__main__":
     headlines = fetch_yahoo_headlines(ticker)
     sentiments = analyze_sentiment(headlines)
     returns = get_stock_change(ticker)
-    sentiment_series = fetch_sentiment_timeseries(ticker)
+    sentiment_series = fetch_sentiment_timeseries(ticker, days=30)
 
     plot_sentiment_vs_return(sentiments, returns)
     plot_sentiment_timeseries(sentiment_series)
