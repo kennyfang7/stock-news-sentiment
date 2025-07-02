@@ -5,3 +5,4 @@ pandas
 nltk
 matplotlib
 tqdm
+streamlit
