@@ -1,26 +1,18 @@
-# Stock News Sentiment Analysis
+# Stock News Sentiment Analyzer
 
-This project scrapes financial news headlines, performs sentiment analysis using VADER, and compares sentiment to recent stock price movements.
+A Streamlit app that fetches stock price history, recent news, applies sentiment analysis, technical indicators, and outputs actionable insights.
 
 ## Features
-- Scrapes headlines from Yahoo Finance
-- Analyzes sentiment with NLTK's VADER
-- Fetches historical stock data with yfinance
-- Visualizes sentiment vs stock return
-- **NEW:** Plots a sentiment time series over the past 30 days for trend tracking
-- **Optimized:** Limits API requests to every 3rd day and shows a progress bar
 
-## Setup
+- Fetches historical price data with `yfinance`
+- Retrieves news via NewsAPI
+- Performs sentiment analysis with `vaderSentiment`
+- Calculates technical indicators: RSI, SMA, MACD
+- Placeholder ML model for trading signal suggestion
+
+## Installation
+
 ```bash
-python -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
-python -c "import nltk; nltk.download('vader_lexicon')"
-```
-
-## Usage
-```bash
-python main.py AAPL
-```
-
----
+export NEWS_API_KEY="your_key_here"
+streamlit run app.py
