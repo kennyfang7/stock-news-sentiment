@@ -11,12 +11,12 @@ from prediction.model import predict_signal
 from utils.helpers import format_sentiment, aggregate_sentiment
 
 st.set_page_config(page_title="Stock News & Sentiment Analyzer", layout="wide")
-
 st.title("📈 Stock News & Sentiment Analyzer")
 
 # --- User Inputs ---
 ticker = st.text_input("Enter stock ticker (e.g. AAPL)", value="AAPL").upper()
-n_articles = st.slider("Number of spaced-out news articles", min_value=1, max_value=50, value=10)
+n_articles = st.slider("Number of news articles", min_value=1, max_value=50, value=10)
+space_out_articles = st.checkbox("Space out news articles by 3 days", value=True)  # ✅ NEW
 
 if st.button("Analyze") and ticker:
     # --- Price History ---
@@ -77,7 +77,7 @@ if st.button("Analyze") and ticker:
     # --- News & Sentiment ---
     st.subheader("🗞️ News & Sentiment")
 
-    news = fetch_and_score(ticker, n_articles)
+    news = fetch_and_score(ticker, n_articles, space_out_articles)  # ✅ UPDATED
     if news:
         df_news = pd.DataFrame(news)
         df_news["formatted"] = df_news["sentiment"].apply(format_sentiment)
@@ -85,6 +85,30 @@ if st.button("Analyze") and ticker:
 
         avg_sent = aggregate_sentiment(df_news["sentiment"].tolist())
         st.markdown(f"**🧠 Average Sentiment Score:** `{avg_sent:.2f}`")
+
+        # 📈 Sentiment Over Time
+        sentiment_by_day = df_news.groupby("publishedAt")["sentiment"].mean().reset_index()
+
+        fig_sent = go.Figure()
+        fig_sent.add_trace(go.Scatter(
+            x=sentiment_by_day["publishedAt"],
+            y=sentiment_by_day["sentiment"],
+            mode="lines+markers",
+            name="Average Sentiment",
+            line=dict(color="crimson")
+        ))
+
+        fig_sent.update_layout(
+            title="🧠 Sentiment Over Time",
+            xaxis_title="Date",
+            yaxis_title="Average Sentiment",
+            yaxis=dict(range=[-1, 1]),
+            height=400,
+            margin=dict(l=40, r=40, t=40, b=40),
+        )
+
+        st.plotly_chart(fig_sent, use_container_width=True)
+
     else:
         st.warning("No news articles found. Try increasing the time range or reducing filters.")
 
